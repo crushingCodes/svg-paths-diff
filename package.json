@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/crushingCodes/svg-paths-diff/issues"
   },
-  "homepage": "https://github.com/crushingCodes/svg-paths-diff#readme"
+  "homepage": "https://github.com/crushingCodes/svg-paths-diff#readme",
+  "dependencies": {
+    "extract-svg-path": "^2.1.0"
+  }
 }
