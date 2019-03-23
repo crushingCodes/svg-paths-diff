@@ -1,0 +1,24 @@
+{
+  "name": "svg-path-diff",
+  "version": "1.0.0",
+  "description": "Output SVG path diff in the shape of another svg path or output matching part of svg",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crushingCodes/svg-paths-diff.git"
+  },
+  "keywords": [
+    "svg",
+    "diff",
+    "path"
+  ],
+  "author": "Gavin James Boyd",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crushingCodes/svg-paths-diff/issues"
+  },
+  "homepage": "https://github.com/crushingCodes/svg-paths-diff#readme"
+}
