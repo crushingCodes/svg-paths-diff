@@ -2,12 +2,16 @@
 const parse = require('parse-svg-path');
 const extract = require('extract-svg-path');
 //Global Variables
-let pathsFound = {};
+let pathsFoundAll = {};
+let svgPathsFound = {};
 //use to test
 getSVGData('./svgs/1.svg');
 getSVGData('./svgs/2.svg');
-console.log(pathsFound);
+//console.log(pathsFoundAll);
+console.log(svgPathsFound);
 function getSVGData(svgFileName) {
+    svgPathsFound[svgFileName] = {};
+    let paths = [];
     let path = extract(svgFileName);
     let svg = parse(path);
     console.log(svgFileName);
@@ -20,9 +24,10 @@ function getSVGData(svgFileName) {
         key = svg[z][0];
         //Handle new path
         if (z > 1 && (key == 'm' || key == "M")) {
-            //Char m signals start of new path
+            //Char M or m signals start of new path
             // console.log(pathString);
-            pathsFound[pathString] = pathsFound[pathString] + 1 || 1;
+            pathsFoundAll[pathString] = pathsFoundAll[pathString] + 1 || 1;
+            paths.push(pathString);
             pathString = "";
         }
         pathString += key;
@@ -42,7 +47,9 @@ function getSVGData(svgFileName) {
     }
     //Handle finish of path data
     //  console.log(pathString);
-    pathsFound[pathString] = pathsFound[pathString] + 1 || 1;
+    pathsFoundAll[pathString] = pathsFoundAll[pathString] + 1 || 1;
+    paths.push(pathString);
+    svgPathsFound[svgFileName] = paths;
     pathString = "";
 }
 //SVG Structure for reference
