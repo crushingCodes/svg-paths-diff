@@ -24,6 +24,9 @@
   "dependencies": {
     "@types/node": "^11.11.6",
     "extract-svg-path": "^2.1.0",
-    "parse-svg-path": "^0.1.2"
+    "parse-svg-path": "^0.1.2",
+    "read-xml": "^3.0.0",
+    "svg-reader": "^0.2.0",
+    "svgi": "^1.1.0"
   }
 }

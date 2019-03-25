@@ -1,93 +1,57 @@
 //Constant Variables
-const parse = require('parse-svg-path');
-const extract = require('extract-svg-path');
-
+const SVG = require('svgi')
+var fs = require('fs'),
+    path = require('path'),
+    xmlReader = require('read-xml');
 //Global Variables
-let svgPathsFoundObject={};
+let svgPathsFoundObject = {};
 
-let filename1="",filename2="";
+let filename1 = "", filename2 = "";
 
 //use to test
-getSVGData('./svgs/1.svg')
-getSVGData('./svgs/2.svg')
+compareSVGPaths('./svgs/1.svg', './svgs/2.svg')
 
-getPathsByFilename('./svgs/1.svg');
 
-function compareSVGPaths(svgFilename1:string,svgFilename2:string){
-filename1=svgFilename1;
-filename2=svgFilename2;
+function compareSVGPaths(svgFilename1: string, svgFilename2: string) {
+    filename1 = svgFilename1;
+    filename2 = svgFilename2;
+    getPathArraySVG(svgFilename1);
+    //getSVGData(svgFilename2);
+    //checkPathMatches();
+
 }
+function getPathArraySVG(svgFileName: string) {
+    'use strict';
 
-
-function getSVGData(svgFileName:string){
-//svgPathsFound[svgFileName]=[];
-//let paths={};
-let paths=[];
-
-let path = extract(svgFileName)
-let svg = parse(path)
-console.log(svgFileName);
-let pathString="";
-let key="";
-let x=0;
-let y=0;
-//let count=0;
-for(let z=0;z<svg.length;z++){
-    key=svg[z][0];
-    //Handle new path
-    if(z>1 && (key=='m' || key=="M")){
-        //Char M or m signals start of new path
-        
-       paths.push(pathString)
-       pathString="";
-    }
-    pathString+=key;
-//Extract data to conform to the library from parse-svg-path
-    for(let a=1;a<svg[z].length+1;a+=2){
-        
-        //First item in array is the key
-        if(svg[z][a] && svg[z][a+1]){
-         x=svg[z][a];
-         y=svg[z][a+1];
-         //Parse extracted data and add to string according to path structure
-            pathString+=(x.toString());
-            pathString+=",";
-            pathString+=(y.toString());
-            pathString+=" ";
+    //Read the XML data in by filename
+    xmlReader.readXML(fs.readFileSync(svgFileName), function (err, data) {
+        if (err) {
+            console.error(err);
         }
 
-    }
 
+        let svg = new SVG(data.content)
+        let svgData = svg.report();
+        let svgPaths, path;
+        let paths = [];
+        if (svgData["nodes"]["children"][1]["children"]) {
+            svgPaths = svgData["nodes"]["children"][1]["children"]
+            for (let item of svgPaths) {
+                if (item["properties"]["d"]) {
+                    path = item["properties"]["d"]
+                    paths.push(path)
+                    console.log(path)
+                }
+            }
+        }
+    });
 }
-    //Handle finish of path data
-  //  console.log(pathString);
 
-    paths.push(pathString)
-
-    svgPathsFoundObject[svgFileName]=paths;
-    pathString="";
-
-}
-function getPathsByFilename(fileName:string):string[]{
-    let pathArray=[];
-   let pathObject=svgPathsFoundObject[fileName];
-
-    Object.entries(pathObject).forEach((svg) => {
-        pathArray.push(svg[1]);
-
-    //    console.log();
-    //    console.log("path");
-    //    console.log(svg[1]);
-    })
-    return pathArray;
-}
-function checkPathMatches(){
-    let pathArray1,pathArray2;
+function checkPathMatches() {
+    let pathArray1, pathArray2;
     //Assume for now only two files
-        pathArray1=getPathsByFilename(filename1);
-        pathArray2=getPathsByFilename(filename2);
-    
-
+    //   pathArray1=getPathsByFilename(filename1);
+    //   pathArray2=getPathsByFilename(filename2);
 
 }
 
