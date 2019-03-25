@@ -38,10 +38,8 @@ function getPathArraySVG(svgFileName: string) {
                 if (item["properties"]["d"]) {
                     path = item["properties"]["d"]
                     paths.push(path)
-                 //   console.log(path)
                 }
             }
-           // console.log(paths)
             resolve(paths)
 
         }
@@ -53,6 +51,10 @@ function getPathArraySVG(svgFileName: string) {
 async function checkPathMatches(svgFilename1:string,svgFilename2:string) {
     let pathArray1, pathArray2;
     let matchCount=0;
+
+    let primaryPaths={};
+    let uniquePaths=[];
+
     //Assume for now only two files
     await getPathArraySVG(svgFilename1).then(data=>{
      //   console.log(data)
@@ -68,12 +70,28 @@ async function checkPathMatches(svgFilename1:string,svgFilename2:string) {
     })
 
     for(let path of pathArray1){
+        if(!primaryPaths[path]){
+            primaryPaths[path]=true;
+        }
+
+
         for(let path2 of pathArray2){
             if(path==path2){
                 matchCount+=1;
             }
         }
     }
+    for(let path2 of pathArray2){
+        if(path==path2){
+            matchCount+=1;
+        }
+        if(!primaryPaths[path2]){
+            uniquePaths.push(path2)
+        }
+    }
+    console.log(uniquePaths);
+
+    
     console.log("matches",matchCount);
 }
 
