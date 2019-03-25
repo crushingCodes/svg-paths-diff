@@ -3,7 +3,7 @@ const SVG = require('svgi');
 var fs = require('fs'), path = require('path'), xmlReader = require('read-xml');
 //Global Variables
 //use to test
-compareSVGPaths('./svgs/1.svg', './svgs/2.svg');
+compareSVGPaths('./svgs/2.svg', './svgs/1.svg');
 function compareSVGPaths(svgFilename1, svgFilename2) {
     //getSVGData(svgFilename2);
     checkPathMatches(svgFilename1, svgFilename2);
@@ -15,6 +15,7 @@ function getPathArraySVG(svgFileName) {
         xmlReader.readXML(fs.readFileSync(svgFileName), function (err, data) {
             if (err) {
                 console.error(err);
+                reject(err);
             }
             let svg = new SVG(data.content);
             let svgData = svg.report();
@@ -26,35 +27,44 @@ function getPathArraySVG(svgFileName) {
                     if (item["properties"]["d"]) {
                         path = item["properties"]["d"];
                         paths.push(path);
-                        //   console.log(path)
                     }
                 }
-                // console.log(paths)
                 resolve(paths);
             }
         });
     });
 }
-async function checkPathMatches(svgFilename1, svgFilename2) {
+//Currently only finds unique from primary
+async function checkPathMatches(primarySVGFilename, secondarySVGFilename) {
     let pathArray1, pathArray2;
-    let matchCount = 0;
+    let primaryPaths = {};
+    let uniquePaths = [];
     //Assume for now only two files
-    await getPathArraySVG(svgFilename1).then(data => {
-        //   console.log(data)
-        pathArray1 = data;
-    });
-    await getPathArraySVG(svgFilename2).then(data => {
+    await getPathArraySVG(secondarySVGFilename).then(data => {
         // console.log(data)
-        pathArray2 = data;
+        pathArray1 = data;
+    }).catch(err => {
+        return console.error(err);
     });
+    await getPathArraySVG(primarySVGFilename).then(data => {
+        //   console.log(data)
+        pathArray2 = data;
+    }).catch(err => {
+        return console.error(err);
+    });
+    //Add the paths from pathArray1 and add to object
     for (let path of pathArray1) {
-        for (let path2 of pathArray2) {
-            if (path == path2) {
-                matchCount += 1;
-            }
+        if (!primaryPaths[path]) {
+            primaryPaths[path] = true;
         }
     }
-    console.log("matches", matchCount);
+    //Check the second array for unique paths
+    for (let path2 of pathArray2) {
+        if (!primaryPaths[path2]) {
+            uniquePaths.push(path2);
+        }
+    }
+    console.log(uniquePaths);
 }
 //SVG Structure for reference
 // M = moveto

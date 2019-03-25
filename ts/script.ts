@@ -5,16 +5,12 @@ var fs = require('fs'),
     xmlReader = require('read-xml');
 //Global Variables
 
-//use to test
-compareSVGPaths('./svgs/1.svg', './svgs/2.svg')
+//Test SVGs
+compareSVGPaths('./svgs/2.svg','./svgs/1.svg');
 
 
 function compareSVGPaths(svgFilename1: string, svgFilename2: string) {
-
-
-    //getSVGData(svgFilename2);
     checkPathMatches(svgFilename1,svgFilename2);
-
 }
 function getPathArraySVG(svgFileName: string) {
     return new Promise((resolve, reject) => {
@@ -41,58 +37,44 @@ function getPathArraySVG(svgFileName: string) {
                 }
             }
             resolve(paths)
-
         }
-
     });
 })
 }
-
-async function checkPathMatches(svgFilename1:string,svgFilename2:string) {
+//Currently only finds exact matches and thus will return non exact paths from primary
+async function checkPathMatches(primarySVGFilename:string,secondarySVGFilename:string) {
     let pathArray1, pathArray2;
-    let matchCount=0;
 
     let primaryPaths={};
     let uniquePaths=[];
 
     //Assume for now only two files
-    await getPathArraySVG(svgFilename1).then(data=>{
+    await getPathArraySVG(secondarySVGFilename).then(data=>{
+        // console.log(data)
+         pathArray1=data
+     }).catch(err=>{
+         return console.error(err);
+     })
+    await getPathArraySVG(primarySVGFilename).then(data=>{
      //   console.log(data)
-        pathArray1=data
-    }).catch(err=>{
-        return console.error(err);
-    })
-    await getPathArraySVG(svgFilename2).then(data=>{
-       // console.log(data)
         pathArray2=data
     }).catch(err=>{
         return console.error(err);
     })
-
+    
+    //Add the paths from pathArray1 and add to object
     for(let path of pathArray1){
         if(!primaryPaths[path]){
             primaryPaths[path]=true;
         }
-
-
-        for(let path2 of pathArray2){
-            if(path==path2){
-                matchCount+=1;
-            }
-        }
     }
+    //Check the second array for unique paths
     for(let path2 of pathArray2){
-        if(path==path2){
-            matchCount+=1;
-        }
         if(!primaryPaths[path2]){
             uniquePaths.push(path2)
         }
     }
     console.log(uniquePaths);
-
-    
-    console.log("matches",matchCount);
 }
 
 //SVG Structure for reference
