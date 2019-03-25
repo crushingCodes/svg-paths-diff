@@ -4,17 +4,22 @@ const extract = require('extract-svg-path');
 
 //Global Variables
 let svgPathsFoundObject={};
-let fileNameArray=[];
 
+let filename1="",filename2="";
 
 //use to test
 getSVGData('./svgs/1.svg')
 getSVGData('./svgs/2.svg')
 
-getPathByFilename('./svgs/1.svg');
+getPathsByFilename('./svgs/1.svg');
+
+function compareSVGPaths(svgFilename1:string,svgFilename2:string){
+filename1=svgFilename1;
+filename2=svgFilename2;
+}
+
 
 function getSVGData(svgFileName:string){
-fileNameArray.push(svgFileName);
 //svgPathsFound[svgFileName]=[];
 //let paths={};
 let paths=[];
@@ -63,7 +68,7 @@ for(let z=0;z<svg.length;z++){
     pathString="";
 
 }
-function getPathByFilename(fileName:string){
+function getPathsByFilename(fileName:string):string[]{
     let pathArray=[];
    let pathObject=svgPathsFoundObject[fileName];
 
@@ -74,6 +79,16 @@ function getPathByFilename(fileName:string){
     //    console.log("path");
     //    console.log(svg[1]);
     })
+    return pathArray;
+}
+function checkPathMatches(){
+    let pathArray1,pathArray2;
+    //Assume for now only two files
+        pathArray1=getPathsByFilename(filename1);
+        pathArray2=getPathsByFilename(filename2);
+    
+
+
 }
 
 //SVG Structure for reference
