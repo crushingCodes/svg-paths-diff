@@ -14,6 +14,7 @@ getSVGData('./svgs/2.svg')
 getPathByFilename('./svgs/1.svg');
 
 function getSVGData(svgFileName:string){
+fileNameArray.push(svgFileName);
 //svgPathsFound[svgFileName]=[];
 //let paths={};
 let paths=[];
@@ -63,14 +64,15 @@ for(let z=0;z<svg.length;z++){
 
 }
 function getPathByFilename(fileName:string){
-
+    let pathArray=[];
    let pathObject=svgPathsFoundObject[fileName];
 
     Object.entries(pathObject).forEach((svg) => {
+        pathArray.push(svg[1]);
 
-       console.log();
-       console.log("path");
-       console.log(svg[1]);
+    //    console.log();
+    //    console.log("path");
+    //    console.log(svg[1]);
     })
 }
 
