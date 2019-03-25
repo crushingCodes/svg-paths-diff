@@ -12,3 +12,4 @@ svgs/*
 temp/
 *.tgz
 package/*
+test/*

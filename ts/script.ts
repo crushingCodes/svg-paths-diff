@@ -6,13 +6,13 @@ var fs = require('fs'),
 //Global Variables
 
 //Test SVGs
-compareSVGPaths('./svgs/2.svg','./svgs/1.svg');
+//compareSVGPaths('./svgs/2.svg','./svgs/1.svg');
 
 
-function compareSVGPaths(svgFilename1: string, svgFilename2: string) {
+var compareSVGPaths = function(svgFilename1: string, svgFilename2: string) {
     checkPathMatches(svgFilename1,svgFilename2);
 }
-function getPathArraySVG(svgFileName: string) {
+var getPathArraySVG = function(svgFileName: string) {
     return new Promise((resolve, reject) => {
 
     'use strict';
@@ -88,3 +88,8 @@ async function checkPathMatches(primarySVGFilename:string,secondarySVGFilename:s
 // T = smooth quadratic Bézier curveto
 // A = elliptical Arc
 // Z = closepath
+
+
+//Exports
+exports.compareSVGPaths = compareSVGPaths;
+exports.getPathArraySVG = getPathArraySVG;
