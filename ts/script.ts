@@ -25,8 +25,8 @@ function getPathArraySVG(svgFileName: string) {
     xmlReader.readXML(fs.readFileSync(svgFileName), function (err, data) {
         if (err) {
             console.error(err);
+            reject(err);
         }
-
 
         let svg = new SVG(data.content)
         let svgData = svg.report();
@@ -57,10 +57,14 @@ async function checkPathMatches(svgFilename1:string,svgFilename2:string) {
     await getPathArraySVG(svgFilename1).then(data=>{
      //   console.log(data)
         pathArray1=data
+    }).catch(err=>{
+        return console.error(err);
     })
     await getPathArraySVG(svgFilename2).then(data=>{
        // console.log(data)
         pathArray2=data
+    }).catch(err=>{
+        return console.error(err);
     })
 
     for(let path of pathArray1){
