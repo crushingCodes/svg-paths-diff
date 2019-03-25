@@ -4,9 +4,6 @@ var fs = require('fs'),
     path = require('path'),
     xmlReader = require('read-xml');
 //Global Variables
-let svgPathsFoundObject = {};
-
-let filename1 = "", filename2 = "";
 
 //use to test
 compareSVGPaths('./svgs/1.svg', './svgs/2.svg')
@@ -19,7 +16,9 @@ function compareSVGPaths(svgFilename1: string, svgFilename2: string) {
     checkPathMatches(svgFilename1,svgFilename2);
 
 }
-function getPathArraySVG(svgFileName: string):string[] {
+function getPathArraySVG(svgFileName: string) {
+    return new Promise((resolve, reject) => {
+
     'use strict';
 
     //Read the XML data in by filename
@@ -39,22 +38,39 @@ function getPathArraySVG(svgFileName: string):string[] {
                 if (item["properties"]["d"]) {
                     path = item["properties"]["d"]
                     paths.push(path)
-                    console.log(path)
+                 //   console.log(path)
                 }
             }
-            return paths;
+           // console.log(paths)
+            resolve(paths)
+
         }
+
     });
-    return null;
+})
 }
 
-function checkPathMatches(svgFilename1:string,svgFilename2:string) {
+async function checkPathMatches(svgFilename1:string,svgFilename2:string) {
     let pathArray1, pathArray2;
-
+    let matchCount=0;
     //Assume for now only two files
-    pathArray1=getPathArraySVG(svgFilename1);
-    pathArray2=getPathArraySVG(svgFilename2);
+    await getPathArraySVG(svgFilename1).then(data=>{
+     //   console.log(data)
+        pathArray1=data
+    })
+    await getPathArraySVG(svgFilename2).then(data=>{
+       // console.log(data)
+        pathArray2=data
+    })
 
+    for(let path of pathArray1){
+        for(let path2 of pathArray2){
+            if(path==path2){
+                matchCount+=1;
+            }
+        }
+    }
+    console.log("matches",matchCount);
 }
 
 //SVG Structure for reference
