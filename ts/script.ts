@@ -13,14 +13,13 @@ compareSVGPaths('./svgs/1.svg', './svgs/2.svg')
 
 
 function compareSVGPaths(svgFilename1: string, svgFilename2: string) {
-    filename1 = svgFilename1;
-    filename2 = svgFilename2;
-    getPathArraySVG(svgFilename1);
+
+
     //getSVGData(svgFilename2);
-    //checkPathMatches();
+    checkPathMatches(svgFilename1,svgFilename2);
 
 }
-function getPathArraySVG(svgFileName: string) {
+function getPathArraySVG(svgFileName: string):string[] {
     'use strict';
 
     //Read the XML data in by filename
@@ -43,15 +42,18 @@ function getPathArraySVG(svgFileName: string) {
                     console.log(path)
                 }
             }
+            return paths;
         }
     });
+    return null;
 }
 
-function checkPathMatches() {
+function checkPathMatches(svgFilename1:string,svgFilename2:string) {
     let pathArray1, pathArray2;
+
     //Assume for now only two files
-    //   pathArray1=getPathsByFilename(filename1);
-    //   pathArray2=getPathsByFilename(filename2);
+    pathArray1=getPathArraySVG(svgFilename1);
+    pathArray2=getPathArraySVG(svgFilename2);
 
 }
 
