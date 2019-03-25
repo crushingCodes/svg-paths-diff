@@ -2,13 +2,12 @@
 const SVG = require('svgi');
 var fs = require('fs'), path = require('path'), xmlReader = require('read-xml');
 //Global Variables
-//use to test
-compareSVGPaths('./svgs/2.svg', './svgs/1.svg');
-function compareSVGPaths(svgFilename1, svgFilename2) {
-    //getSVGData(svgFilename2);
+//Test SVGs
+//compareSVGPaths('./svgs/2.svg','./svgs/1.svg');
+var compareSVGPaths = function (svgFilename1, svgFilename2) {
     checkPathMatches(svgFilename1, svgFilename2);
-}
-function getPathArraySVG(svgFileName) {
+};
+var getPathArraySVG = function (svgFileName) {
     return new Promise((resolve, reject) => {
         'use strict';
         //Read the XML data in by filename
@@ -33,21 +32,19 @@ function getPathArraySVG(svgFileName) {
             }
         });
     });
-}
-//Currently only finds unique from primary
+};
+//Currently only finds exact matches and thus will return non exact paths from primary
 async function checkPathMatches(primarySVGFilename, secondarySVGFilename) {
     let pathArray1, pathArray2;
     let primaryPaths = {};
     let uniquePaths = [];
     //Assume for now only two files
     await getPathArraySVG(secondarySVGFilename).then(data => {
-        // console.log(data)
         pathArray1 = data;
     }).catch(err => {
         return console.error(err);
     });
     await getPathArraySVG(primarySVGFilename).then(data => {
-        //   console.log(data)
         pathArray2 = data;
     }).catch(err => {
         return console.error(err);
@@ -77,3 +74,6 @@ async function checkPathMatches(primarySVGFilename, secondarySVGFilename) {
 // T = smooth quadratic Bézier curveto
 // A = elliptical Arc
 // Z = closepath
+//Exports
+exports.compareSVGPaths = compareSVGPaths;
+exports.getPathArraySVG = getPathArraySVG;

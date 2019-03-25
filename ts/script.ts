@@ -50,13 +50,11 @@ async function checkPathMatches(primarySVGFilename:string,secondarySVGFilename:s
 
     //Assume for now only two files
     await getPathArraySVG(secondarySVGFilename).then(data=>{
-        // console.log(data)
          pathArray1=data
      }).catch(err=>{
          return console.error(err);
      })
     await getPathArraySVG(primarySVGFilename).then(data=>{
-     //   console.log(data)
         pathArray2=data
     }).catch(err=>{
         return console.error(err);
